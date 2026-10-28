@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1f1f1f;
+    --foreground: #ededed;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+@theme {
+  /* Brand blue; primary-600 (#009cec) is the base shade. */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e3f3ff;
+  --color-primary-200: #c3eaff;
+  --color-primary-300: #93dbff;
+  --color-primary-400: #61caff;
+  --color-primary-500: #2fb7ff;
+  --color-primary-600: #009cec;
+  --color-primary-700: #0079bb;
+  --color-primary-800: #006498;
+  --color-primary-900: #02517c;
+  --color-primary-950: #002f4d;
+
+  /* Cyan accent; accent-500 (#00c3ec) is the base shade. */
+  --color-accent-50: #eefdff;
+  --color-accent-100: #d7f9ff;
+  --color-accent-200: #b4f4ff;
+  --color-accent-300: #83eaff;
+  --color-accent-400: #34dbff;
+  --color-accent-500: #00c3ec;
+  --color-accent-600: #099ac5;
+  --color-accent-700: #0e7a9e;
+  --color-accent-800: #15627f;
+  --color-accent-900: #16506a;
+  --color-accent-950: #063347;
+
+  /* Dark-theme surfaces, ordered by elevation. */
+  --color-dark-base: #121212;
+  --color-dark-elevated: #1a1a1a;
+  --color-dark-high: #222222;
+  --color-dark-border-subtle: #2a2a2a;
+  --color-dark-border-default: #333333;
+  --color-dark-border-medium: #444444;
+  --color-dark-border-strong: #555555;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
