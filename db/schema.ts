@@ -43,6 +43,7 @@ export const questionTable = pgTable('question', {
   id: uuid().primaryKey().defaultRandom(),
   slug: text().notNull().unique(),
   title: text().notNull(),
+  description: text(),
   answer: text().notNull(),
   sources: jsonb().$type<Link[]>().notNull().default([]),
   categoryId: uuid()
