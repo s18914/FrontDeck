@@ -1,0 +1,14 @@
+[
+  { "slug": "javascript", "name": "JavaScript", "color": "#f0db4f" },
+  { "slug": "typescript", "name": "TypeScript", "color": "#3178c6" },
+  { "slug": "react", "name": "React", "color": "#61dafb" },
+  { "slug": "nextjs", "name": "Next.js", "color": "#18181b" },
+  { "slug": "state-and-data", "name": "State & Data Fetching", "color": "#7c3aed" },
+  { "slug": "browser", "name": "Browser & DOM", "color": "#fb923c" },
+  { "slug": "html-css", "name": "HTML & CSS", "color": "#db2777" },
+  { "slug": "accessibility", "name": "Accessibility", "color": "#15803d" },
+  { "slug": "performance", "name": "Performance", "color": "#a3e635" },
+  { "slug": "security", "name": "Web Security", "color": "#b91c1c" },
+  { "slug": "networking", "name": "HTTP & Networking", "color": "#64748b" },
+  { "slug": "testing", "name": "Testing", "color": "#a16207" }
+]

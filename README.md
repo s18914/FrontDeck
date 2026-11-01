@@ -24,14 +24,19 @@ FrontDeck helps frontend developers prepare for technical interviews with spaced
 
 ## Getting started
 
-Requirements: Node.js 20.9 or later and npm.
+Requirements: Node.js 20.9 or later, npm and a Postgres database (a free [Neon](https://neon.tech/) branch works well).
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in DATABASE_URL
+npm run db:migrate
+npm run db:seed
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Questions live as Markdown files in [content/questions](content/questions). After editing them, run `npm run db:seed` again; it adds new questions and updates changed ones.
 
 ## Scripts
 
@@ -46,12 +51,17 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run test:watch`   | Run unit tests in watch mode                        |
 | `npm run format`       | Format all files with Prettier                      |
 | `npm run format:check` | Check formatting without writing changes            |
+| `npm run db:generate`  | Generate a migration from schema changes            |
+| `npm run db:migrate`   | Apply pending migrations                            |
+| `npm run db:seed`      | Load questions from `content/` into the database    |
+| `npm run db:studio`    | Browse the database in Drizzle Studio               |
 
 ## Architecture decisions
 
 Significant decisions are recorded as ADRs in [docs/decisions](docs/decisions):
 
 1. [Runtime and toolchain versions](docs/decisions/0001-runtime-and-toolchain-versions.md)
+2. [Database migrations on Vercel](docs/decisions/0002-database-migrations-on-vercel.md)
 
 ## License
 
