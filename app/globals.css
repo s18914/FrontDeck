@@ -80,6 +80,70 @@ body {
   }
 }
 
+/*
+ * Select with a styled dropdown. Browsers that support customizable selects
+ * get the custom list; others fall back to the native one. The arrow is drawn
+ * by the component, so the built-in icons are hidden.
+ */
+@utility select-picker {
+  appearance: none;
+
+  @supports (appearance: base-select) {
+    &,
+    &::picker(select) {
+      appearance: base-select;
+    }
+
+    /* A base-select lays out its button content from the top. */
+    & {
+      display: flex;
+      align-items: center;
+    }
+
+    &::picker-icon {
+      display: none;
+    }
+
+    &::picker(select) {
+      margin-block: 0.25rem;
+      max-height: 16rem;
+      padding: 0.25rem;
+      border: 1px solid var(--color-gray-300);
+      border-radius: 0.5rem;
+      background: var(--background);
+      box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+    }
+
+    & option {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+    }
+
+    & option::checkmark {
+      display: none;
+    }
+
+    & option:hover,
+    & option:focus-visible {
+      outline: none;
+      background: color-mix(
+        in srgb,
+        var(--color-primary-600) 10%,
+        var(--background)
+      );
+    }
+
+    & option:checked {
+      font-weight: 600;
+      background: color-mix(
+        in srgb,
+        var(--color-primary-600) 18%,
+        var(--background)
+      );
+    }
+  }
+}
+
 /* Fades the brand gradient into the page background, in light and dark mode. */
 @utility bg-fade-to-background {
   background-image: linear-gradient(
