@@ -12,11 +12,17 @@ import { and, asc, eq, ilike, inArray, sql } from 'drizzle-orm'
 import { cache } from 'react'
 
 const questionsFiltersSchema = z.object({
-  category: z.string().optional(),
-  level: z.enum(['junior', 'mid', 'senior']).optional(),
-  tag: z.string().optional(),
-  search: z.string().trim().max(100).optional(),
+  category: z.string().optional().catch(undefined),
+  level: z.enum(['junior', 'mid', 'senior']).optional().catch(undefined),
+  tag: z.string().optional().catch(undefined),
+  search: z.string().trim().max(100).optional().catch(undefined),
 })
+
+export function parseQuestionFilters(
+  searchParams: Record<string, string | string[] | undefined>,
+) {
+  return questionsFiltersSchema.parse(searchParams)
+}
 
 export type QuestionListItem = Awaited<ReturnType<typeof getQuestions>>[number]
 export type QuestionDetail = NonNullable<
