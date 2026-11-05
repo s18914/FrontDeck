@@ -3,6 +3,9 @@ import { QuestionList } from '@/components/question-list'
 import { getCategories } from '@/data/categories'
 import { getQuestions, parseQuestionFilters } from '@/data/questions'
 import { getTags } from '@/data/tags'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Questions' }
 
 export default async function Questions(props: PageProps<'/questions'>) {
   const filters = parseQuestionFilters(await props.searchParams)

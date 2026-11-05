@@ -8,7 +8,10 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'FrontDeck',
+  title: {
+    template: '%s · FrontDeck',
+    default: 'FrontDeck',
+  },
   description:
     'Prepare for frontend interviews with spaced repetition: a curated question library with answers linked to official documentation.',
 }
