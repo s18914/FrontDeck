@@ -84,6 +84,16 @@ export async function getQuestions(
   return questions
 }
 
+export const getQuestionSlugs = async () => {
+  const slugs = await db
+    .select({
+      slug: questionTable.slug,
+    })
+    .from(questionTable)
+
+  return slugs.map((s) => s.slug)
+}
+
 export const getQuestionBySlug = cache(async (slug: string) => {
   const [question] = await db
     .select({

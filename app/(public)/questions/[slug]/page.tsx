@@ -1,7 +1,17 @@
 import { QuestionArticle } from '@/components/question-article'
-import { getQuestionBySlug } from '@/data/questions'
+import { getQuestionBySlug, getQuestionSlugs } from '@/data/questions'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+
+export const dynamicParams = false
+
+export async function generateStaticParams() {
+  if (process.env.SKIP_DB_PRERENDER) {
+    return []
+  }
+  const slugs = await getQuestionSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
 
 export async function generateMetadata(
   props: PageProps<'/questions/[slug]'>,
