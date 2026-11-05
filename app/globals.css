@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 :root {
   --background: #ffffff;
@@ -152,4 +153,17 @@ body {
     color-mix(in srgb, var(--background) 72%, transparent) 40%,
     color-mix(in srgb, var(--background) 27%, transparent) 90%
   );
+}
+
+/* Code highlighted by Shiki carries both themes; pick one per color scheme. */
+code[data-theme*=' '],
+code[data-theme*=' '] span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  code[data-theme*=' '],
+  code[data-theme*=' '] span {
+    color: var(--shiki-dark);
+  }
 }
