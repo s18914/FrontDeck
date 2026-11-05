@@ -1,4 +1,31 @@
+import { QuestionArticle } from '@/components/question-article'
+import { getQuestionBySlug } from '@/data/questions'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+
+export async function generateMetadata(
+  props: PageProps<'/questions/[slug]'>,
+): Promise<Metadata> {
+  const { slug } = await props.params
+  const question = await getQuestionBySlug(slug)
+
+  if (!question) {
+    return {}
+  }
+
+  return {
+    title: question.title,
+    description: `Question: ${question.category.name}`,
+  }
+}
+
 export default async function Question(props: PageProps<'/questions/[slug]'>) {
   const { slug } = await props.params
-  return <h1>Question {slug}</h1>
+  const question = await getQuestionBySlug(slug)
+
+  if (!question) {
+    notFound()
+  }
+
+  return <QuestionArticle question={question} />
 }
