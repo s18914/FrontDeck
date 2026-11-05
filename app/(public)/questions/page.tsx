@@ -18,7 +18,7 @@ export default async function Questions(props: PageProps<'/questions'>) {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
-      <div className="mb-[20px] md:mb-[40px]">
+      <div className="mb-5 md:mb-10">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           Questions
         </h1>
