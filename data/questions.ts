@@ -8,7 +8,7 @@ import {
   questionTagTable,
   tagTable,
 } from '@/db/schema'
-import { and, asc, eq, ilike, inArray, sql } from 'drizzle-orm'
+import { and, asc, eq, ne, ilike, inArray, sql } from 'drizzle-orm'
 import { cache } from 'react'
 
 const questionsFiltersSchema = z.object({
@@ -33,7 +33,6 @@ export async function getQuestions(
   input: z.input<typeof questionsFiltersSchema>,
 ) {
   const filters = questionsFiltersSchema.parse(input)
-
   const questions = await db
     .select({
       id: questionTable.id,
@@ -127,3 +126,37 @@ export const getQuestionBySlug = cache(async (slug: string) => {
 
   return question ?? null
 })
+
+export async function getRelatedQuestions(question: {
+  slug: string
+  categorySlug: string
+  levelName: string
+}) {
+  return db
+    .select({
+      title: questionTable.title,
+      slug: questionTable.slug,
+      level: { name: levelTable.name },
+      tags: sql<
+        string[]
+      >`coalesce(array_agg(${tagTable.name} order by ${tagTable.name}) filter (where ${tagTable.name} is not null), '{}')`,
+    })
+    .from(questionTable)
+    .innerJoin(categoryTable, eq(questionTable.categoryId, categoryTable.id))
+    .innerJoin(levelTable, eq(questionTable.levelId, levelTable.id))
+    .leftJoin(
+      questionTagTable,
+      eq(questionTagTable.questionId, questionTable.id),
+    )
+    .leftJoin(tagTable, eq(tagTable.id, questionTagTable.tagId))
+    .where(
+      and(
+        eq(categoryTable.slug, question.categorySlug),
+        eq(levelTable.name, question.levelName),
+        ne(questionTable.slug, question.slug),
+      ),
+    )
+    .groupBy(questionTable.id, categoryTable.id, levelTable.id)
+    .orderBy(asc(questionTable.title))
+    .limit(4)
+}
