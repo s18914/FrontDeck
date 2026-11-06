@@ -2,7 +2,7 @@ import { GradientBackdrop } from '@/components/gradient-backdrop'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { buttonClasses } from '@/components/ui/button'
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = { title: 'Page not found' }

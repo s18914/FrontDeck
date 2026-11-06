@@ -1,5 +1,10 @@
 import { QuestionArticle } from '@/components/question-article'
-import { getQuestionBySlug, getQuestionSlugs } from '@/data/questions'
+import { RelatedQuestions } from '@/components/related-questions'
+import {
+  getQuestionBySlug,
+  getQuestionSlugs,
+  getRelatedQuestions,
+} from '@/data/questions'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -31,11 +36,23 @@ export async function generateMetadata(
 
 export default async function Question(props: PageProps<'/questions/[slug]'>) {
   const { slug } = await props.params
+
   const question = await getQuestionBySlug(slug)
 
   if (!question) {
     notFound()
   }
 
-  return <QuestionArticle question={question} />
+  const relatedQuestions = await getRelatedQuestions({
+    slug: question.slug,
+    categorySlug: question.category.slug,
+    levelName: question.level.name,
+  })
+
+  return (
+    <>
+      <QuestionArticle question={question} />
+      <RelatedQuestions questions={relatedQuestions} />
+    </>
+  )
 }
