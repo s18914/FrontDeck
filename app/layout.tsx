@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { siteUrl } from '@/lib/site-url'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
   },
   description:
     'Prepare for frontend interviews with spaced repetition: a curated question library with answers linked to official documentation.',
+  metadataBase: new URL(siteUrl),
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
