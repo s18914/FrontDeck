@@ -8,8 +8,6 @@ import {
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-export const dynamicParams = false
-
 export async function generateStaticParams() {
   if (process.env.SKIP_DB_PRERENDER) {
     return []
