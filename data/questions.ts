@@ -9,7 +9,7 @@ import {
   tagTable,
 } from '@/db/schema'
 import { and, asc, eq, ne, ilike, inArray, sql } from 'drizzle-orm'
-import { cache } from 'react'
+import { cacheLife, cacheTag } from 'next/cache'
 
 const questionsFiltersSchema = z.object({
   category: z.string().optional().catch(undefined),
@@ -84,6 +84,9 @@ export async function getQuestions(
 }
 
 export const getQuestionSlugs = async () => {
+  'use cache'
+  cacheLife('max')
+  cacheTag('questions')
   const slugs = await db
     .select({
       slug: questionTable.slug,
@@ -93,7 +96,10 @@ export const getQuestionSlugs = async () => {
   return slugs.map((s) => s.slug)
 }
 
-export const getQuestionBySlug = cache(async (slug: string) => {
+export async function getQuestionBySlug(slug: string) {
+  'use cache'
+  cacheLife('max')
+  cacheTag('questions')
   const [question] = await db
     .select({
       id: questionTable.id,
@@ -125,13 +131,16 @@ export const getQuestionBySlug = cache(async (slug: string) => {
     .groupBy(questionTable.id, categoryTable.id, levelTable.id)
 
   return question ?? null
-})
+}
 
 export async function getRelatedQuestions(question: {
   slug: string
   categorySlug: string
   levelName: string
 }) {
+  'use cache'
+  cacheLife('max')
+  cacheTag('questions')
   return db
     .select({
       title: questionTable.title,

@@ -2,11 +2,14 @@ import 'server-only'
 import { db } from '@/db'
 import { categoryTable } from '@/db/schema'
 import { asc } from 'drizzle-orm'
-import { cache } from 'react'
+import { cacheLife, cacheTag } from 'next/cache'
 
 export type CategoriesItem = Awaited<ReturnType<typeof getCategories>>[number]
 
-export const getCategories = cache(async () => {
+export const getCategories = async () => {
+  'use cache'
+  cacheLife('max')
+  cacheTag('categories')
   const categories = await db
     .select({
       name: categoryTable.name,
@@ -17,4 +20,4 @@ export const getCategories = cache(async () => {
     .orderBy(asc(categoryTable.name))
 
   return categories
-})
+}
