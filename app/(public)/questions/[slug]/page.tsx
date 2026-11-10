@@ -9,9 +9,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 export async function generateStaticParams() {
-  if (process.env.SKIP_DB_PRERENDER) {
-    return []
-  }
   const slugs = await getQuestionSlugs()
   return slugs.map((slug) => ({ slug }))
 }

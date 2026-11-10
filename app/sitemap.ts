@@ -8,10 +8,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/questions` },
   ]
 
-  if (process.env.SKIP_DB_PRERENDER) {
-    return staticPages
-  }
-
   const questions = await getQuestionSlugs()
 
   return [
