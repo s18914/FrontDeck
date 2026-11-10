@@ -4,9 +4,9 @@ const base =
 const variants = {
   // The gradient is twice as wide as the button and slides to the right on hover.
   gradient:
-    'bg-linear-to-r from-primary-600 via-accent-500 to-primary-600 bg-size-[200%_100%] bg-left text-white transition-[background-position] duration-500 ease-out hover:bg-right motion-reduce:transition-none',
+    'bg-linear-to-r from-primary-700 via-accent-700 to-primary-700 bg-size-[200%_100%] bg-left text-white transition-[background-position] duration-500 ease-out hover:bg-right motion-reduce:transition-none',
   primary:
-    'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800',
+    'bg-primary-700 text-white hover:bg-primary-800 active:bg-primary-900',
   outline:
     'border border-gray-400 hover:border-gray-600 dark:border-dark-border-strong dark:hover:border-gray-400',
   ghost: 'hover:bg-gray-100 dark:hover:bg-dark-high',
