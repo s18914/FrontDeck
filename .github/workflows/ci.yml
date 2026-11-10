@@ -35,8 +35,4 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
-      # Pages generated from the database are skipped here: CI has no database
-      # access. Vercel preview builds render them against a migrated branch.
-      - run: npm run build
-        env:
-          SKIP_DB_PRERENDER: '1'
+      - run: npm run build -- --experimental-build-mode=compile

@@ -17,7 +17,9 @@ npm run db:migrate && npm run db:seed && npm run build
 
 Each deployment brings its own database up to date. Preview deployments migrate a copy of production, so a migration is tested before it reaches `main`. The seed is idempotent, so content changes in `content/` are deployed the same way as code.
 
-CI in GitHub Actions keeps running `npm run build` without database access. Pages generated from the database at build time (question pages via `generateStaticParams`) check `SKIP_DB_PRERENDER`, which only the CI workflow sets, and return no paths there. CI still verifies that the app compiles, and the Vercel preview build renders every page against a branch that already has the pull request's migrations. A CI database was rejected because it would not have those migrations, so a correct pull request that adds a column could fail in CI.
+CI builds the app in compile mode (next build --experimental-build-mode=compile). This checks that the app compiles on both Node versions and needs no database.
+The Vercel preview build verifies prerendering with real data, against a branch that already has the pull request's migrations.
+With Cache Components, generateStaticParams must return at least one param, and cached database data is prerendered at build time. Skipping database queries in CI therefore stopped working. A CI database was rejected because it would not have those migrations, so a correct pull request that adds a column could fail in CI.
 
 ## Alternatives
 
