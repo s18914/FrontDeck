@@ -62,6 +62,8 @@ Significant decisions are recorded as ADRs in [docs/decisions](docs/decisions):
 
 1. [Runtime and toolchain versions](docs/decisions/0001-runtime-and-toolchain-versions.md)
 2. [Database migrations on Vercel](docs/decisions/0002-database-migrations-on-vercel.md)
+3. [Caching strategy](docs/decisions/0003-caching-strategy.md)
+4. [Authentication](docs/decisions/0004-authentication.md)
 
 ## License
 
