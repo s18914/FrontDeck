@@ -110,3 +110,17 @@ export const repeatLogTable = pgTable('repeat_log', {
   rating: ratingEnum().notNull(),
   reviewedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 })
+
+export const sessionTable = pgTable(
+  'session',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: uuid()
+      .notNull()
+      .references(() => userTable.id, { onDelete: 'cascade' }),
+    tokenHash: text().notNull().unique('session_token_hash_unique'),
+    expiresAt: timestamp({ withTimezone: true }).notNull(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('session_user_idx').on(t.userId)],
+)
