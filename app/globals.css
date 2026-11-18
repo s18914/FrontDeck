@@ -155,6 +155,19 @@ body {
   );
 }
 
+/*
+ * Fades the brand gradient into the page background from the edges, leaving
+ * a soft oval of colour in the middle. The first stop is the centre.
+ */
+@utility bg-fade-radial-to-background {
+  background-image: radial-gradient(
+    ellipse at 50% 50%,
+    color-mix(in srgb, var(--background) 27%, transparent),
+    color-mix(in srgb, var(--background) 63%, transparent) 30%,
+    var(--background) 60%
+  );
+}
+
 /* Code highlighted by Shiki carries both themes; pick one per color scheme. */
 code[data-theme*=' '],
 code[data-theme*=' '] span {
