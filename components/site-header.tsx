@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { buttonClasses } from './ui/button'
+import { Suspense } from 'react'
+import { UserMenu } from './user-menu'
 
 export function SiteHeader() {
   return (
@@ -21,17 +22,9 @@ export function SiteHeader() {
               </li>
             </ul>
           </nav>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className={buttonClasses({ variant: 'ghost', size: 'sm' })}
-            >
-              Sign in
-            </Link>
-            <Link href="/register" className={buttonClasses({ size: 'sm' })}>
-              Create account
-            </Link>
-          </div>
+          <Suspense fallback={<div className="h-8 w-44" aria-hidden />}>
+            <UserMenu />
+          </Suspense>
         </div>
       </div>
     </header>

@@ -2,7 +2,7 @@ import 'server-only'
 import { db } from '@/db'
 import { userTable } from '@/db/schema'
 import { eq } from 'drizzle-orm'
-import { z } from 'zod'
+import { verifySession } from './auth'
 
 export async function createUser(email: string, passwordHash: string) {
   const newUser = await db
@@ -21,4 +21,15 @@ export async function getUserCredentialsByEmail(email: string) {
     .limit(1)
 
   return user[0] ?? undefined
+}
+
+export async function getCurrentUser() {
+  const session = await verifySession()
+  if (!session) return null
+  const rows = await db
+    .select({ email: userTable.email })
+    .from(userTable)
+    .where(eq(userTable.id, session.userId))
+    .limit(1)
+  return rows[0] ?? null
 }
