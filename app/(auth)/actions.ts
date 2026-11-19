@@ -2,8 +2,8 @@
 
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { createUser } from '@/data/users'
-import { hashPassword } from '@/lib/auth/password'
+import { createUser, getUserCredentialsByEmail } from '@/data/users'
+import { hashPassword, verifyPassword } from '@/lib/auth/password'
 import { createSession, setSessionCookie } from '@/lib/auth/session'
 
 export type AuthFormState = {
@@ -23,6 +23,21 @@ const registerSchema = z.object({
     .min(8, 'Password must be at least 8 characters.')
     .max(128),
 })
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email('Enter a valid email address.')),
+  password: z.string().min(1, 'Enter your password.'),
+})
+
+// Hash of a throwaway password. Used when no user matches the email, so that
+// verifyPassword still runs the full scrypt and the response takes the same
+// time whether or not the account exists.
+const DUMMY_HASH =
+  'scrypt$131072$8$1$WmurSHTB/QvCX8VK8jULvg==$dZWme1jiDtevLFXGKX/1EAuXFqw1TRWlmnT0jz31eaRaDD1edNXfeFu422u6/WhSWPel5MF0oP83FDM6+3ZnoA=='
 
 export async function signUp(
   prevState: AuthFormState,
@@ -53,6 +68,40 @@ export async function signUp(
   }
 
   const session = await createSession(userId)
+  await setSessionCookie(session.token, session.expiresAt)
+
+  redirect('/')
+}
+
+export async function signIn(
+  prevState: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const result = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+
+  if (!result.success) {
+    return {
+      fieldErrors: z.flattenError(result.error).fieldErrors,
+      values: { email: String(formData.get('email') ?? '') },
+    }
+  }
+
+  const { email, password } = result.data
+
+  const user = await getUserCredentialsByEmail(email)
+
+  const valid = await verifyPassword(password, user?.passwordHash ?? DUMMY_HASH)
+
+  if (!user || !valid) {
+    return {
+      formError: 'Invalid email or password.',
+      values: { email: email },
+    }
+  }
+  const session = await createSession(user.id)
   await setSessionCookie(session.token, session.expiresAt)
 
   redirect('/')
