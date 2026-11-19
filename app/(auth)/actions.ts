@@ -4,7 +4,14 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { createUser, getUserCredentialsByEmail } from '@/data/users'
 import { hashPassword, verifyPassword } from '@/lib/auth/password'
-import { createSession, setSessionCookie } from '@/lib/auth/session'
+import {
+  createSession,
+  setSessionCookie,
+  getSessionToken,
+  validateSessionToken,
+  invalidateSession,
+  deleteSessionCookie,
+} from '@/lib/auth/session'
 
 export type AuthFormState = {
   fieldErrors?: { email?: string[]; password?: string[] }
@@ -104,5 +111,16 @@ export async function signIn(
   const session = await createSession(user.id)
   await setSessionCookie(session.token, session.expiresAt)
 
+  redirect('/')
+}
+
+export async function signOut() {
+  const token = await getSessionToken()
+  if (token) {
+    const session = await validateSessionToken(token)
+    if (session) await invalidateSession(session.id)
+  }
+
+  await deleteSessionCookie()
   redirect('/')
 }
