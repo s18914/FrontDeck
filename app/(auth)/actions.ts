@@ -12,6 +12,11 @@ import {
   invalidateSession,
   deleteSessionCookie,
 } from '@/lib/auth/session'
+import {
+  consumeLoginAttempt,
+  getClientIp,
+  resetLoginAttempts,
+} from '@/lib/auth/rate-limit'
 
 export type AuthFormState = {
   fieldErrors?: { email?: string[]; password?: string[] }
@@ -95,8 +100,15 @@ export async function signIn(
       values: { email: String(formData.get('email') ?? '') },
     }
   }
-
   const { email, password } = result.data
+
+  const ip = await getClientIp()
+
+  if (!(await consumeLoginAttempt(email, ip)))
+    return {
+      formError: 'Too many sign-in attempts. Try again in 15 minutes.',
+      values: { email },
+    }
 
   const user = await getUserCredentialsByEmail(email)
 
@@ -108,6 +120,8 @@ export async function signIn(
       values: { email: email },
     }
   }
+
+  await resetLoginAttempts(email)
   const session = await createSession(user.id)
   await setSessionCookie(session.token, session.expiresAt)
 
