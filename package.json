@@ -20,6 +20,8 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
     "@next/env": "^16.4.6",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.41.0",
     "drizzle-orm": "^0.45.4",
     "next": "16.4.6",
     "react": "19.3.0",
