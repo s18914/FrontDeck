@@ -17,33 +17,13 @@ import {
   getClientIp,
   resetLoginAttempts,
 } from '@/lib/auth/rate-limit'
+import { loginSchema, registerSchema } from './schemas'
 
 export type AuthFormState = {
   fieldErrors?: { email?: string[]; password?: string[] }
   formError?: string
   values?: { email: string }
 }
-
-const registerSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .pipe(z.email('Enter a valid email address.')),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters.')
-    .max(128),
-})
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .pipe(z.email('Enter a valid email address.')),
-  password: z.string().min(1, 'Enter your password.'),
-})
 
 // Hash of a throwaway password. Used when no user matches the email, so that
 // verifyPassword still runs the full scrypt and the response takes the same
