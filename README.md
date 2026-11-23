@@ -17,6 +17,7 @@ FrontDeck helps frontend developers prepare for technical interviews with spaced
 - [TypeScript](https://www.typescriptlang.org/) in strict mode
 - [Tailwind CSS 4](https://tailwindcss.com/)
 - [Drizzle ORM](https://orm.drizzle.team/) with [Neon](https://neon.tech/) Postgres
+- [Upstash Redis](https://upstash.com/) for sign-in rate limiting
 - [Zod](https://zod.dev/) for validation
 - [Vitest](https://vitest.dev/) and [Testing Library](https://testing-library.com/) for unit tests, [Playwright](https://playwright.dev/) for end-to-end tests
 - ESLint, Prettier and GitHub Actions
@@ -24,11 +25,11 @@ FrontDeck helps frontend developers prepare for technical interviews with spaced
 
 ## Getting started
 
-Requirements: Node.js 20.9 or later, npm and a Postgres database (a free [Neon](https://neon.tech/) branch works well).
+Requirements: Node.js 20.9 or later, npm, a Postgres database (a free [Neon](https://neon.tech/) branch works well) and an [Upstash](https://upstash.com/) Redis database for sign-in rate limiting (the free plan is enough).
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in DATABASE_URL
+cp .env.example .env.local   # then fill in DATABASE_URL and the KV_REST_API_* variables
 npm run db:migrate
 npm run db:seed
 npm run dev

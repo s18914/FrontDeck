@@ -15,7 +15,8 @@ Authentication is implemented in the app, without an auth library.
 - **Cookie:** `httpOnly`, `secure`, `sameSite: 'lax'`, `path: '/'` and an explicit expiry.
 - **Password hashing with scrypt** from `node:crypto`, with a per-user salt. It needs no new dependency. OWASP recommends Argon2id first and scrypt when Argon2id is not available; Argon2id in Node.js requires a native package.
 - **Session checks next to the data.** `verifySession` in the data access layer reads the cookie and the session row, wrapped in React `cache` so a request queries the database once. Every function that returns or changes user data calls it. Session data is never read inside `'use cache'`.
-- **`proxy.ts` only for optimistic redirects**, for example from `/dashboard` to `/sign-in` when there is no cookie. It does not query the database and is not a security boundary.
+- **`proxy.ts` only for optimistic redirects**, for example from `/dashboard` to `/login` when there is no cookie. It does not query the database and is not a security boundary.
+- **Sign-in rate limiting in Upstash Redis** (added 2026-11-20). Each attempt counts against two sliding windows of 15 minutes: 5 attempts per email and 20 per IP address. The attempt is counted before the password check, so checking and counting is one atomic operation and a blocked request does not run scrypt. A successful sign-in resets only the email counter. Counters live in Redis because serverless instances do not share memory. If Redis does not answer within 5 seconds, the attempt is allowed (fail-open), because the password check still runs.
 - User-specific UI on public pages, such as the account menu in the header, renders under `<Suspense>`, so the rest of the page stays prerendered.
 
 ## Alternatives
@@ -25,10 +26,13 @@ Authentication is implemented in the app, without an auth library.
 - **Clerk and other hosted services:** user data lives with a third party, and the free tier has limits.
 - **Stateless JWT sessions:** no database query per request, but a token stays valid until it expires, so sign-out and revoking a stolen session are not possible without a denylist.
 - **bcrypt:** a common choice, but it needs a dependency and truncates passwords longer than 72 bytes.
+- **Rate limit counters in memory:** each serverless instance has its own memory, so an attacker would keep reaching fresh instances.
+- **Rate limit counters in a Postgres table:** no new service, but incrementing and checking is not atomic without extra locking, and expired rows need a cleanup job.
 
 ## Consequences
 
 - Every authenticated request queries the `session` table once.
+- Every sign-in attempt makes two HTTP requests to Upstash, sent in parallel. The app needs Upstash credentials in every environment where sign-in runs.
 - The app is responsible for what a library would provide: password hashing parameters, session expiry and cleanup, sign-in rate limiting and generic error messages that do not reveal whether an email exists.
 - Server Actions are protected from CSRF by Next.js, which accepts only POST requests and compares the `Origin` header with the host, and by `sameSite: 'lax'`.
 - Adding OAuth or passkeys later would be a good moment to move to a library.
